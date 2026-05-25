@@ -1,0 +1,25 @@
+{
+  "name": "black-ice-game-engine",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "vite examples/minimal",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src test examples --ext .js",
+    "lint:fix": "eslint src test examples --ext .js --fix",
+    "docs": "jsdoc -c jsdoc.config.json"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.0.0",
+    "eslint": "^8.0.0",
+    "jsdoc": "^4.0.0",
+    "jsdom": "^29.1.1",
+    "vite": "^5.0.0",
+    "vitest": "^1.0.0"
+  }
+}
