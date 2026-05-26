@@ -195,6 +195,10 @@ export class Engine {
     // Rolling FPS (simple 1-frame estimate)
     if (dt > 0) this._fps = Math.round(1 / dt);
 
+    // Begin frame before update so rendering systems can draw during update()
+    this._renderer.beginFrame();
+    this._renderer.clear(this._backgroundColor);
+
     if (!this._paused) {
       this._time += dt;
       this._accumulator += dt;
@@ -205,16 +209,13 @@ export class Engine {
         this._accumulator -= this._fixedStep;
       }
 
-      // Variable update
+      // Variable update (rendering systems draw here)
       this._scenes.update(dt);
     }
 
     // Flush input once per visual frame (after all updates)
     this._input.flush();
 
-    // Render
-    this._renderer.beginFrame();
-    this._renderer.clear(this._backgroundColor);
     this._scenes.render();
     this._renderer.endFrame();
   }
