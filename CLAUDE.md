@@ -20,6 +20,11 @@ To run a single test file:
 npx vitest run test/physics/PhysicsSystem.test.js
 ```
 
+To run the game (not the engine demo):
+```bash
+npx vite game/
+```
+
 ## Architecture
 
 **Language / Runtime:** JavaScript (ES modules), browser (HTML5 Canvas 2D). Zero runtime dependencies.
@@ -40,6 +45,24 @@ npx vitest run test/physics/PhysicsSystem.test.js
 - `src/physics/` — `RigidBody`, `Collider`, `PhysicsSystem` (priority 500); fixed-step AABB solver
 - `src/audio/` — `AudioManager` wrapping Web Audio API; lazy `AudioContext` (requires user gesture)
 - `src/scene/` — `Scene` (each owns its own `World`), `SceneManager` (stack: push/pop/replace)
+- `src/animation/` — `AnimationClip`, `Animator` (component), `AnimationSystem` (priority 100); writes atlas frame to `Sprite` each tick
+- `src/tilemap/` — `Tileset`, `Tilemap` (grid + solid-tile query), `TilemapRenderSystem` (priority 50), `TilemapCollisionSystem` (priority 450)
+- `src/particles/` — `ParticleEmitter` (component with `burst(n)`), `ParticleSystem` (priority 900)
+- `src/ui/` — `UIElement`/`UIText`/`UIBar`/`UIImage` (screen-space components), `UISystem` (priority 2000)
+
+**Game (`game/`):**
+- `game/main.js` — bootstrap; entry point for `npx vite game/`
+- `game/state.js` — shared mutable state (score, level, keys)
+- `game/components/` — `Health`, `PlayerTag`, `EnemyTag`, `ItemPickup`, `BossTag`
+- `game/systems/` — `PlayerSystem` (10), `EnemySystem` (20), `CombatSystem` (30), `ItemSystem` (40), `HUDSystem` (2100)
+- `game/levels/` — `level1.js`, `level2.js`, `level3.js` (boss arena); each exports `{ tiles, mapWidth, mapHeight, tileW, tileH, spawns, keysRequired }`
+- `game/scenes/` — `MenuScene`, `GameScene`, `GameOverScene`, `WinScene`
+
+**System execution order in GameScene:**
+`TilemapRenderSystem(50)` → `PlayerSystem(10)` → `EnemySystem(20)` → `CombatSystem(30)` → `ItemSystem(40)` → `TilemapCollisionSystem(450)` → `PhysicsSystem(500)` → `AnimationSystem(100)` → `RenderSystem(1000)` → `ParticleSystem(900)` → `UISystem(2000)` → `HUDSystem(2100)`
+
+**Collision layer/mask used in game:**
+- `0x0001` = player body; `0x0002` = enemy body; `0x0004` = item trigger; `0x0010` = player attack hitbox
 
 **Game loop order (each rAF tick):**
 1. Clamp dt (panic guard via `maxFrameTime`)
