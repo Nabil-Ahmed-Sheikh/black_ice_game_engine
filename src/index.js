@@ -37,3 +37,25 @@ export { AudioManager } from './audio/AudioManager.js';
 // Scene
 export { Scene } from './scene/Scene.js';
 export { SceneManager } from './scene/SceneManager.js';
+
+// Animation
+export { AnimationClip } from './animation/AnimationClip.js';
+export { Animator } from './animation/Animator.js';
+export { AnimationSystem } from './animation/AnimationSystem.js';
+
+// Tilemap
+export { Tileset } from './tilemap/Tileset.js';
+export { Tilemap } from './tilemap/Tilemap.js';
+export { TilemapRenderSystem } from './tilemap/TilemapRenderSystem.js';
+export { TilemapCollisionSystem } from './tilemap/TilemapCollisionSystem.js';
+
+// Particles
+export { ParticleEmitter } from './particles/ParticleEmitter.js';
+export { ParticleSystem } from './particles/ParticleSystem.js';
+
+// UI
+export { UIElement } from './ui/UIElement.js';
+export { UIText } from './ui/UIText.js';
+export { UIBar } from './ui/UIBar.js';
+export { UIImage } from './ui/UIImage.js';
+export { UISystem } from './ui/UISystem.js';
