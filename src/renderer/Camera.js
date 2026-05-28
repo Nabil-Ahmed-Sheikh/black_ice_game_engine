@@ -1,5 +1,6 @@
 import { Vector2 } from '../math/Vector2.js';
 import { AABB } from '../math/AABB.js';
+import { Transform } from '../ecs/Transform.js';
 
 /**
  * 2D camera controlling the viewport transform applied to the canvas.
@@ -125,11 +126,7 @@ export class Camera {
   update(dt) {
     void dt;
     if (!this._followTarget) return;
-    const { Transform } = /** @type {any} */ (this._followTarget)._components;
-    const t = this._followTarget.getComponent(
-      // Avoid a circular import — locate Transform dynamically.
-      [...this._followTarget._components.keys()].find((C) => C.name === 'Transform'),
-    );
+    const t = this._followTarget.getComponent(Transform);
     if (!t) return;
     this.position = this.position.lerp(t.position, this._followLerp);
   }

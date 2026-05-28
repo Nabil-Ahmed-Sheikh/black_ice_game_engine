@@ -211,6 +211,7 @@ export class Engine {
 
       // Variable update (rendering systems draw here)
       this._scenes.update(dt);
+      this._camera.update(dt);
     }
 
     // Flush input once per visual frame (after all updates)
