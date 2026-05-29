@@ -29,15 +29,28 @@ export class UISystem extends System {
   update(dt) {
     void dt;
     const ctx = this._renderer.ctx;
-    const entities = this.query(UIElement)
-      .filter((e) => e.getComponent(UIElement).visible)
-      .sort((a, b) => a.getComponent(UIElement).layer - b.getComponent(UIElement).layer);
+
+    // Components are keyed by their concrete class, not the base UIElement,
+    // so query each subtype separately and deduplicate.
+    const seen = new Set();
+    const entities = [];
+    for (const Cls of [UIText, UIBar, UIImage]) {
+      for (const e of this.query(Cls)) {
+        if (!seen.has(e.id)) { seen.add(e.id); entities.push(e); }
+      }
+    }
+
+    entities.sort((a, b) => {
+      const la = (a.getComponent(UIText) ?? a.getComponent(UIBar) ?? a.getComponent(UIImage))?.layer ?? 0;
+      const lb = (b.getComponent(UIText) ?? b.getComponent(UIBar) ?? b.getComponent(UIImage))?.layer ?? 0;
+      return la - lb;
+    });
 
     ctx.save();
-    // Draw in screen space — no camera transform applied
 
     for (const entity of entities) {
-      const el = entity.getComponent(UIElement);
+      const el = entity.getComponent(UIText) ?? entity.getComponent(UIBar) ?? entity.getComponent(UIImage);
+      if (!el?.visible) continue;
 
       if (el instanceof UIText) {
         ctx.font = el.font;
