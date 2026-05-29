@@ -31,24 +31,23 @@ export class GameScene extends Scene {
 
   init() {
     const { world, engine } = this;
-    const { renderer, camera } = engine;
 
     const levelData = LEVELS[state.level - 1];
     const tileset = new Tileset(null, levelData.tileW, levelData.tileH);
     const tilemap = new Tilemap({ tileset, ...levelData });
 
-    // Systems in priority order
-    world.addSystem(new TilemapRenderSystem(world, renderer, camera, tilemap));
+    // Systems in priority order — renderer/camera auto-injected from engine
+    world.addSystem(new TilemapRenderSystem(world, tilemap));
     world.addSystem(new PlayerSystem(world));
     world.addSystem(new EnemySystem(world));
     world.addSystem(new CombatSystem(world));
     world.addSystem(new ItemSystem(world));
     world.addSystem(new TilemapCollisionSystem(world, tilemap));
-    world.addSystem(new PhysicsSystem(world, { gravity: Vector2.zero() }));
-    world.addSystem(new AnimationSystem(world));
-    world.addSystem(new RenderSystem(world, renderer, camera));
-    world.addSystem(new ParticleSystem(world, renderer, camera));
-    world.addSystem(new UISystem(world, renderer));
+    world.addSystem(PhysicsSystem, { gravity: Vector2.zero() });
+    world.addSystem(AnimationSystem);
+    world.addSystem(RenderSystem);
+    world.addSystem(ParticleSystem);
+    world.addSystem(UISystem);
     world.addSystem(new HUDSystem(world));
 
     spawnLevel(world, levelData);

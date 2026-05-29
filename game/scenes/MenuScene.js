@@ -8,47 +8,12 @@ export class MenuScene extends Scene {
   constructor() { super('menu'); }
 
   init() {
-    const { world, engine } = this;
-    const { renderer } = engine;
+    this.addSystem(UISystem);
 
-    world.addSystem(new UISystem(world, renderer));
-
-    // Title
-    const title = world.createEntity();
-    title.addComponent(new UIText({
-      x: 400, y: 160,
-      text: '⚔  BLACK ICE  ⚔',
-      font: 'bold 36px monospace',
-      color: '#aaddff',
-      align: 'center',
-    }));
-
-    const subtitle = world.createEntity();
-    subtitle.addComponent(new UIText({
-      x: 400, y: 220,
-      text: 'Dungeon Crawler',
-      font: '18px monospace',
-      color: '#6688aa',
-      align: 'center',
-    }));
-
-    const prompt = world.createEntity();
-    prompt.addComponent(new UIText({
-      x: 400, y: 310,
-      text: 'Press SPACE to Start',
-      font: '20px monospace',
-      color: '#ffffff',
-      align: 'center',
-    }));
-
-    const controls = world.createEntity();
-    controls.addComponent(new UIText({
-      x: 400, y: 360,
-      text: 'WASD / Arrows = Move   Space / Z = Attack',
-      font: '13px monospace',
-      color: '#888888',
-      align: 'center',
-    }));
+    this.spawn(new UIText({ x: 400, y: 160, text: '⚔  BLACK ICE  ⚔', font: 'bold 36px monospace', color: '#aaddff', align: 'center' }));
+    this.spawn(new UIText({ x: 400, y: 220, text: 'Dungeon Crawler', font: '18px monospace', color: '#6688aa', align: 'center' }));
+    this.spawn(new UIText({ x: 400, y: 310, text: 'Press SPACE to Start', font: '20px monospace', color: '#ffffff', align: 'center' }));
+    this.spawn(new UIText({ x: 400, y: 360, text: 'WASD / Arrows = Move   Space / Z = Attack', font: '13px monospace', color: '#888888', align: 'center' }));
   }
 
   update(dt) {

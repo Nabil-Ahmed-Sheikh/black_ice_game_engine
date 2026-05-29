@@ -71,4 +71,13 @@ describe('Entity', () => {
     e.destroy();
     expect(e.isAlive).toBe(false);
   });
+
+  it('get is a short alias for getComponent', () => {
+    const world = new World();
+    const e = world.createEntity();
+    const t = new Transform({ x: 7 });
+    e.addComponent(t);
+    expect(e.get(Transform)).toBe(t);
+    expect(e.get(TagA)).toBeUndefined();
+  });
 });

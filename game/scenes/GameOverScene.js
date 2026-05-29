@@ -9,13 +9,12 @@ export class GameOverScene extends Scene {
   constructor() { super('gameover'); }
 
   init() {
-    const { world, engine } = this;
-    world.addSystem(new UISystem(world, engine.renderer));
+    this.addSystem(UISystem);
 
-    world.createEntity().addComponent(new UIText({ x: 400, y: 170, text: 'GAME OVER', font: 'bold 44px monospace', color: '#ff4444', align: 'center' }));
-    world.createEntity().addComponent(new UIText({ x: 400, y: 240, text: `Score: ${state.score}`, font: '22px monospace', color: '#ffffff', align: 'center' }));
-    world.createEntity().addComponent(new UIText({ x: 400, y: 300, text: 'R — Retry level', font: '18px monospace', color: '#cccccc', align: 'center' }));
-    world.createEntity().addComponent(new UIText({ x: 400, y: 330, text: 'M — Main Menu', font: '18px monospace', color: '#cccccc', align: 'center' }));
+    this.spawn(new UIText({ x: 400, y: 170, text: 'GAME OVER', font: 'bold 44px monospace', color: '#ff4444', align: 'center' }));
+    this.spawn(new UIText({ x: 400, y: 240, text: `Score: ${state.score}`, font: '22px monospace', color: '#ffffff', align: 'center' }));
+    this.spawn(new UIText({ x: 400, y: 300, text: 'R — Retry level', font: '18px monospace', color: '#cccccc', align: 'center' }));
+    this.spawn(new UIText({ x: 400, y: 330, text: 'M — Main Menu', font: '18px monospace', color: '#cccccc', align: 'center' }));
   }
 
   update(dt) {

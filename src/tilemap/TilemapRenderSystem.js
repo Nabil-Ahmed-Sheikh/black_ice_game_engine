@@ -10,17 +10,34 @@ import { System } from '../ecs/System.js';
  */
 export class TilemapRenderSystem extends System {
   /**
+   * Accepts two call forms:
+   * - `new TilemapRenderSystem(world, tilemap)` — renderer and camera are injected from `world.engine`.
+   * - `new TilemapRenderSystem(world, renderer, camera, tilemap)` — explicit (legacy form, still works).
+   *
    * @param {import('../ecs/World.js').World} world
-   * @param {import('../renderer/Renderer.js').Renderer} renderer
-   * @param {import('../renderer/Camera.js').Camera} camera
-   * @param {import('./Tilemap.js').Tilemap} tilemap
+   * @param {import('../renderer/Renderer.js').Renderer|import('./Tilemap.js').Tilemap} rendererOrTilemap
+   * @param {import('../renderer/Camera.js').Camera} [camera]
+   * @param {import('./Tilemap.js').Tilemap} [tilemap]
    */
-  constructor(world, renderer, camera, tilemap) {
+  constructor(world, rendererOrTilemap, camera, tilemap) {
     super(world);
     this.priority = 50;
-    this._renderer = renderer;
-    this._camera = camera;
-    this._tilemap = tilemap;
+    if (rendererOrTilemap && 'getTile' in rendererOrTilemap) {
+      // Short form: new TilemapRenderSystem(world, tilemap)
+      this._tilemap = rendererOrTilemap;
+      this._renderer = null;
+      this._camera = null;
+    } else {
+      // Legacy form: new TilemapRenderSystem(world, renderer, camera, tilemap)
+      this._renderer = rendererOrTilemap ?? null;
+      this._camera = camera ?? null;
+      this._tilemap = tilemap;
+    }
+  }
+
+  init() {
+    this._renderer ??= this.world.engine?.renderer;
+    this._camera ??= this.world.engine?.camera;
   }
 
   /**

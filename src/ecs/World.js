@@ -57,14 +57,51 @@ export class World {
   /** @returns {Entity[]} Snapshot of all living entities. */
   get entities() { return [...this._entities.values()]; }
 
+  // ── Spawn helpers ─────────────────────────────────────────────────────────
+
+  /**
+   * Create an entity and attach all given components in one call.
+   * @param {...import('./Component.js').Component} components
+   * @returns {import('./Entity.js').Entity}
+   * @example
+   * const player = world.spawn(new Transform({ x: 100 }), new RigidBody(), new Sprite());
+   */
+  spawn(...components) {
+    const entity = this.createEntity();
+    for (const c of components) entity.addComponent(c);
+    return entity;
+  }
+
+  /**
+   * Return a factory function that calls `spawn` with the components produced by `factory`.
+   * @param {function(...*): import('./Component.js').Component[]} factory
+   * @returns {function(...*): import('./Entity.js').Entity}
+   * @example
+   * const makeBullet = world.prefab((x, y) => [new Transform({ x, y }), new RigidBody()]);
+   * const b = makeBullet(200, 100);
+   */
+  prefab(factory) {
+    return (...args) => this.spawn(...factory(...args));
+  }
+
   // ── System management ─────────────────────────────────────────────────────
 
   /**
-   * Register a system. Calls `system.init()` and re-sorts by priority.
-   * @param {import('./System.js').System} system
+   * Register a system. Accepts either an already-constructed instance, or a
+   * System class (with optional options) — in which case the world is injected
+   * automatically.
+   *
+   * @param {import('./System.js').System|function} systemOrClass - System instance or class.
+   * @param {*} [options] - Passed as the second argument when constructing from a class.
    * @returns {this}
+   * @example
+   * world.addSystem(new PhysicsSystem(world, { gravity })); // existing form
+   * world.addSystem(PhysicsSystem, { gravity });            // new short form
    */
-  addSystem(system) {
+  addSystem(systemOrClass, options) {
+    const system = typeof systemOrClass === 'function'
+      ? new systemOrClass(this, options)
+      : systemOrClass;
     this._systems.push(system);
     this._systems.sort((a, b) => a.priority - b.priority);
     system.init();

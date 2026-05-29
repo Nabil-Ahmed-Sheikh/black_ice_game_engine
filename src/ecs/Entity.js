@@ -71,6 +71,15 @@ export class Entity {
   getComponent(Class) { return this._components.get(Class); }
 
   /**
+   * Short alias for {@link Entity#getComponent}.
+   * @param {Function} Class
+   * @returns {import('./Component.js').Component|undefined}
+   * @example
+   * const t = entity.get(Transform);
+   */
+  get(Class) { return this._components.get(Class); }
+
+  /**
    * @param {Function} Class
    * @returns {boolean}
    */

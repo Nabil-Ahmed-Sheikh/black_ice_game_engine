@@ -52,4 +52,19 @@ export class System {
   query(...ComponentClasses) {
     return this.world.query(...ComponentClasses);
   }
+
+  /**
+   * Like `query`, but returns `[entity, c1, c2, ...]` tuples so components can
+   * be destructured directly without repeated `getComponent` calls.
+   * @param {...Function} ComponentClasses
+   * @returns {Array<[import('./Entity.js').Entity, ...import('./Component.js').Component[]]>}
+   * @example
+   * for (const [entity, t, rb] of this.queryComponents(Transform, RigidBody)) {
+   *   rb.velocity.x = 100;
+   * }
+   */
+  queryComponents(...ComponentClasses) {
+    return this.world.query(...ComponentClasses)
+      .map((e) => [e, ...ComponentClasses.map((C) => e.getComponent(C))]);
+  }
 }

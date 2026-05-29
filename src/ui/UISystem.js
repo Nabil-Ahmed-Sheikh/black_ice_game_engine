@@ -15,12 +15,16 @@ import { UIImage } from './UIImage.js';
 export class UISystem extends System {
   /**
    * @param {import('../ecs/World.js').World} world
-   * @param {import('../renderer/Renderer.js').Renderer} renderer
+   * @param {import('../renderer/Renderer.js').Renderer} [renderer] - Falls back to `world.engine.renderer`.
    */
   constructor(world, renderer) {
     super(world);
     this.priority = 2000;
-    this._renderer = renderer;
+    this._renderer = renderer ?? null;
+  }
+
+  init() {
+    this._renderer ??= this.world.engine?.renderer;
   }
 
   /**

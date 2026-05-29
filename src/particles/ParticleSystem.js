@@ -13,14 +13,19 @@ import { ParticleEmitter } from './ParticleEmitter.js';
 export class ParticleSystem extends System {
   /**
    * @param {import('../ecs/World.js').World} world
-   * @param {import('../renderer/Renderer.js').Renderer} renderer
-   * @param {import('../renderer/Camera.js').Camera} camera
+   * @param {import('../renderer/Renderer.js').Renderer} [renderer] - Falls back to `world.engine.renderer`.
+   * @param {import('../renderer/Camera.js').Camera} [camera] - Falls back to `world.engine.camera`.
    */
   constructor(world, renderer, camera) {
     super(world);
     this.priority = 900;
-    this._renderer = renderer;
-    this._camera = camera;
+    this._renderer = renderer ?? null;
+    this._camera = camera ?? null;
+  }
+
+  init() {
+    this._renderer ??= this.world.engine?.renderer;
+    this._camera ??= this.world.engine?.camera;
   }
 
   /**

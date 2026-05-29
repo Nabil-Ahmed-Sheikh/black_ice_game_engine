@@ -21,6 +21,8 @@ class MockSystem extends System {
   destroy() { this.destroyCalled = true; }
 }
 
+class TagB extends Component {}
+
 describe('World', () => {
   it('creates entities with unique ids', () => {
     const world = new World();
@@ -111,5 +113,41 @@ describe('World', () => {
     expect(s.destroyCalled).toBe(true);
     expect(world.entities).toHaveLength(0);
     expect(world._systems).toHaveLength(0);
+  });
+
+  it('spawn creates entity with all components attached', () => {
+    const world = new World();
+    const t = new Transform({ x: 5 });
+    const tag = new TagA();
+    const e = world.spawn(t, tag);
+    expect(e.getComponent(Transform)).toBe(t);
+    expect(e.getComponent(TagA)).toBe(tag);
+    expect(world.entities).toHaveLength(1);
+  });
+
+  it('prefab returns a factory that spawns entities', () => {
+    const world = new World();
+    const make = world.prefab((x, y) => [new Transform({ x, y }), new TagA()]);
+    const e1 = make(10, 20);
+    const e2 = make(30, 40);
+    expect(e1.getComponent(Transform).position.x).toBe(10);
+    expect(e2.getComponent(Transform).position.x).toBe(30);
+    expect(world.entities).toHaveLength(2);
+  });
+
+  it('addSystem accepts a class and injects world', () => {
+    const world = new World();
+    world.addSystem(MockSystem);
+    const s = world.getSystem(MockSystem);
+    expect(s).toBeDefined();
+    expect(s.initCalled).toBe(true);
+    expect(s.world).toBe(world);
+  });
+
+  it('addSystem class overload passes options as second constructor arg', () => {
+    const world = new World();
+    world.addSystem(MockSystem, 42);
+    const s = world.getSystem(MockSystem);
+    expect(s.priority).toBe(42);
   });
 });

@@ -13,17 +13,22 @@ import { Sprite } from './Sprite.js';
 export class RenderSystem extends System {
   /**
    * @param {import('../ecs/World.js').World} world
-   * @param {import('./Renderer.js').Renderer} renderer
-   * @param {import('./Camera.js').Camera} camera
+   * @param {import('./Renderer.js').Renderer} [renderer] - Falls back to `world.engine.renderer` if omitted.
+   * @param {import('./Camera.js').Camera} [camera] - Falls back to `world.engine.camera` if omitted.
    */
   constructor(world, renderer, camera) {
     super(world);
     /** Runs last so physics/logic updates are already applied. */
     this.priority = 1000;
     /** @type {import('./Renderer.js').Renderer} */
-    this._renderer = renderer;
+    this._renderer = renderer ?? null;
     /** @type {import('./Camera.js').Camera} */
-    this._camera = camera;
+    this._camera = camera ?? null;
+  }
+
+  init() {
+    this._renderer ??= this.world.engine?.renderer;
+    this._camera ??= this.world.engine?.camera;
   }
 
   /**

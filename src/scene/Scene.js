@@ -79,6 +79,30 @@ export class Scene {
     return this._world.createEntity();
   }
 
+  /**
+   * Create an entity and attach all given components. Shorthand for `world.spawn()`.
+   * @param {...import('../ecs/Component.js').Component} components
+   * @returns {import('../ecs/Entity.js').Entity}
+   * @throws {Error} When called before the scene is initialised.
+   */
+  spawn(...components) {
+    if (!this._world) throw new Error('Scene not initialised');
+    return this._world.spawn(...components);
+  }
+
+  /**
+   * Register a system. Accepts an instance or a class (world is auto-injected).
+   * Shorthand for `world.addSystem()`.
+   * @param {import('../ecs/System.js').System|function} systemOrClass
+   * @param {*} [options]
+   * @returns {this}
+   */
+  addSystem(systemOrClass, options) {
+    if (!this._world) throw new Error('Scene not initialised');
+    this._world.addSystem(systemOrClass, options);
+    return this;
+  }
+
   // ── Internal (called by SceneManager) ─────────────────────────────────────
 
   /**
