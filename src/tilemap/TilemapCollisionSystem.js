@@ -22,7 +22,7 @@ export class TilemapCollisionSystem extends System {
    */
   constructor(world, tilemap) {
     super(world);
-    this.priority = 450;
+    this.priority = 550;
     this._tilemap = tilemap;
   }
 

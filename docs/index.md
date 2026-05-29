@@ -1,6 +1,7 @@
 # Black Ice Game Engine
 
-A lightweight 2D game engine for the browser, built on HTML5 Canvas 2D.
+A lightweight 2D game engine for the browser, built on HTML5 Canvas 2D.  
+Zero runtime dependencies. ES modules only.
 
 ## Quick Start
 
@@ -33,21 +34,33 @@ A lightweight 2D game engine for the browser, built on HTML5 Canvas 2D.
 </html>
 ```
 
-## Running the Demo
+## Running
 
 ```bash
 npm install
-npm run dev   # opens examples/minimal/ via Vite dev server
+npm run dev        # engine demo (examples/minimal/)
+npx vite game/     # full dungeon game
+npm test           # run all tests
 ```
 
 ## Docs
 
+### Getting Started
+- **[How to Use](./how-to-use.md)** — step-by-step guide: bootstrap, movement, tilemaps, animation, particles, HUD, audio, scene transitions
+
+### Engine Reference
 - [Architecture](./architecture.md)
-- [Engine](./engine.md)
-- [ECS](./ecs.md)
-- [Math](./math.md)
-- [Renderer](./renderer.md)
-- [Input](./input.md)
-- [Physics](./physics.md)
-- [Audio](./audio.md)
-- [Scene](./scene.md)
+- [Engine & EventBus](./engine.md)
+- [ECS — Entity, Component, System, World, Transform](./ecs.md)
+- [Math — Vector2, AABB](./math.md)
+- [Renderer — Renderer, Camera, Sprite, RenderSystem](./renderer.md)
+- [Input — Keyboard, Mouse, InputManager](./input.md)
+- [Physics — PhysicsSystem, RigidBody, Collider](./physics.md)
+- [Audio — AudioManager, AudioClip](./audio.md)
+- [Scene — Scene, SceneManager](./scene.md)
+
+### Subsystems (v0.2)
+- [Animation — AnimationClip, Animator, AnimationSystem](./animation.md)
+- [Tilemap — Tileset, Tilemap, TilemapRenderSystem, TilemapCollisionSystem](./tilemap.md)
+- [Particles — ParticleEmitter, ParticleSystem](./particles.md)
+- [UI — UIText, UIBar, UIImage, UISystem](./ui.md)
