@@ -1,4 +1,4 @@
-# Black Ice Game Engine
+# Black Ice Game Engine (BIG Engine)
 
 A lightweight 2D game engine for the browser, built on HTML5 Canvas 2D. Zero runtime dependencies.
 
